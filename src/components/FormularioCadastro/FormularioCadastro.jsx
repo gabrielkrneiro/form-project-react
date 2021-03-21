@@ -1,32 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
 
-export default function FormularioCadastro() {
-  let name = "";
+// FormularioCadastro(props)
+export default function FormularioCadastro({
+  envioFormulario,
+  validarCPF,
+  validarNome,
+}) {
+  const [nome, setNome] = useState("");
+  const [sobreNome, setSobreNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [promocoes, setPromocoes] = useState(true);
+  const [novidades, setNovidades] = useState(true);
+
+  const [erros, setErros] = useState(
+    {
+      nome: { valido: true, text: "" },
+      cpf: { valido: true, text: "" },
+    },
+    {}
+  );
 
   return (
     <form
       action=""
       onSubmit={(event) => {
         event.preventDefault();
-        console.log(name);
+        envioFormulario({ nome, sobreNome, cpf, promocoes, novidades });
       }}
     >
       <TextField
-        onChange={(event) => {
-          name = event.target.value;
-          if (name.length > 3) {
-            name = name.substr(0, 3);
-          }
-        }}
+        value={nome}
+        error={!erros.nome.valido}
+        helperText={erros.nome.texto}
         id="nome"
         label="Nome"
         variant="outlined"
         fullWidth
         margin="normal"
+        onChange={(event) => setNome(event.target.value)}
+        onBlur={() => {
+          setErros({ ...erros, nome: validarNome(nome) });
+        }}
       />
 
       <TextField
+        value={sobreNome}
+        onChange={(event) => setSobreNome(event.target.value)}
         id="sobrenome"
         label="Sobrenome"
         variant="outlined"
@@ -35,24 +55,41 @@ export default function FormularioCadastro() {
       />
 
       <TextField
+        value={cpf}
+        error={!erros.cpf.valido}
+        helperText={erros.cpf.texto}
         id="cpf"
         label="CPF"
         variant="outlined"
         fullWidth
         margin="normal"
+        onChange={(event) => setCpf(event.target.value)}
+        onBlur={() => {
+          setErros({ ...erros, cpf: validarCPF(cpf) });
+        }}
       />
 
       <FormControlLabel
         label="Promocoes"
         control={
-          <Switch name="promocoes" defaultChecked={true} color="primary" />
+          <Switch
+            name="promocoes"
+            checked={promocoes}
+            color="primary"
+            onChange={(event) => setPromocoes(event.target.checked)}
+          />
         }
       />
 
       <FormControlLabel
-        label="novidades"
+        label="Novidades"
         control={
-          <Switch name="novidades" defaultChecked={true} color="primary" />
+          <Switch
+            name="novidades"
+            checked={novidades}
+            color="primary"
+            onChange={(event) => setNovidades(event.target.checked)}
+          />
         }
       />
 
