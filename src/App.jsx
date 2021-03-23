@@ -14,7 +14,6 @@ function App() {
       <FormularioCadastro
         envioFormulario={aoEnviarForm}
         validarCPF={validarCPF}
-        validarNome={validarNome}
       />
     </Container>
   );
@@ -22,13 +21,6 @@ function App() {
 
 function aoEnviarForm(dados) {
   console.log(dados);
-}
-
-function validarNome(nome) {
-  if (nome.length < 3) {
-    return { valido: false, texto: "Nome deve ter no mínimo 3 dígitos" };
-  }
-  return { valido: true, texto: "" };
 }
 
 function validarCPF(cpf) {
