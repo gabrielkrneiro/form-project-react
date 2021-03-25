@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
 
 // FormularioCadastro(props)
-export default function DadosPessoais({ envioFormulario, validarCPF }) {
+export default function DadosPessoais({ aoEnviar, validarCPF }) {
   const [nome, setNome] = useState("");
   const [sobreNome, setSobreNome] = useState("");
   const [cpf, setCpf] = useState("");
@@ -18,7 +18,7 @@ export default function DadosPessoais({ envioFormulario, validarCPF }) {
       action=""
       onSubmit={(event) => {
         event.preventDefault();
-        envioFormulario({ nome, sobreNome, cpf, promocoes, novidades });
+        aoEnviar({ nome, sobreNome, cpf, promocoes, novidades });
       }}
     >
       <TextField

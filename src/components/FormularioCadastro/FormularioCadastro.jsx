@@ -1,30 +1,21 @@
-import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import DadosEntrega from "./DadosEntrega";
 import DadosPessoais from "./DadosPessoais";
 import DadosUsuario from "./DadosUsuarios";
 
 // FormularioCadastro(props)
-export default function FormularioCadastro({ envioFormulario, validarCPF }) {
+export default function FormularioCadastro({ aoEnviar, validarCPF }) {
   const [etapaAtual, setEtapaAtual] = useState(0);
 
-  function formularioAtual(etapaAtual) {
-    switch (etapaAtual) {
-      case 0:
-        return <DadosUsuario />;
-      case 1:
-        return (
-          <DadosPessoais
-            envioFormulario={envioFormulario}
-            validarCPF={validarCPF}
-          />
-        );
-      case 2:
-        return <DadosEntrega />;
-      default:
-        return <Typography>Erro</Typography>;
-    }
+  function proximo() {
+    setEtapaAtual(etapaAtual + 1);
   }
 
-  return <>{formularioAtual(etapaAtual)}</>;
+  const formularios = [
+    <DadosUsuario aoEnviar={proximo} />,
+    <DadosPessoais aoEnviar={proximo} validarCPF={validarCPF} />,
+    <DadosEntrega aoEnviar={aoEnviar} />,
+  ];
+
+  return <>{formularios[etapaAtual]}</>;
 }

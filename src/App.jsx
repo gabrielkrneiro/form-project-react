@@ -11,10 +11,7 @@ function App() {
       <Typography variant="h3" component="h1" align="center">
         Formulário de cadastro
       </Typography>
-      <FormularioCadastro
-        envioFormulario={aoEnviarForm}
-        validarCPF={validarCPF}
-      />
+      <FormularioCadastro aoEnviar={aoEnviarForm} validarCPF={validarCPF} />
     </Container>
   );
 }
