@@ -2,62 +2,89 @@ import React, { useState } from "react";
 import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
 
 // FormularioCadastro(props)
-export default function DadosPessoais({ aoEnviar, validarCPF }) {
+export default function DadosPessoais({ aoEnviar, validacoes }) {
   const [nome, setNome] = useState("");
   const [sobreNome, setSobreNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [promocoes, setPromocoes] = useState(true);
   const [novidades, setNovidades] = useState(true);
 
-  const [erros, setErros] = useState({
-    cpf: { valido: true, text: "" },
-  });
+  const [erros, setErros] = useState(
+    {
+      cpf: { valido: true, text: "" },
+      nome: { valido: true, text: "" },
+    },
+    {}
+  );
+
+  function validarCampos(event) {
+    const { name, value } = event.target;
+    const novoEstado = { ...erros }; // para validacao dinamica eh necessario realizar copia do estado
+    novoEstado[name] = validacoes[name](value);
+    setErros(novoEstado);
+  }
+
+  function possoEnviar() {
+    for (let campo in erros) {
+      if (!erros[campo].valido) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   return (
     <form
       action=""
       onSubmit={(event) => {
         event.preventDefault();
-        aoEnviar({ nome, sobreNome, cpf, promocoes, novidades });
+        if (possoEnviar()) {
+          aoEnviar({ nome, sobreNome, cpf, promocoes, novidades });
+        }
       }}
     >
       <TextField
-        value={nome}
         id="nome"
+        name="nome"
         label="Nome"
         variant="outlined"
-        fullWidth
         margin="normal"
+        fullWidth
+        value={nome}
+        error={!erros.nome.valido}
+        helperText={erros.nome.texto}
         onChange={(event) => setNome(event.target.value)}
+        onBlur={validarCampos}
       />
 
       <TextField
-        value={sobreNome}
-        onChange={(event) => setSobreNome(event.target.value)}
         id="sobrenome"
+        name="sobrenome"
         label="Sobrenome"
         variant="outlined"
-        fullWidth
         margin="normal"
+        fullWidth
+        value={sobreNome}
+        onChange={(event) => setSobreNome(event.target.value)}
       />
 
       <TextField
+        id="cpf"
+        name="cpf"
+        label="CPF"
+        variant="outlined"
+        margin="normal"
+        fullWidth
         value={cpf}
         error={!erros.cpf.valido}
         helperText={erros.cpf.texto}
-        id="cpf"
-        label="CPF"
-        variant="outlined"
-        fullWidth
-        margin="normal"
         onChange={(event) => setCpf(event.target.value)}
-        onBlur={() => {
-          setErros({ ...erros, cpf: validarCPF(cpf) });
-        }}
+        onBlur={validarCampos}
       />
 
       <FormControlLabel
         label="Promocoes"
+        name="promocoes"
         control={
           <Switch
             name="promocoes"
@@ -70,6 +97,7 @@ export default function DadosPessoais({ aoEnviar, validarCPF }) {
 
       <FormControlLabel
         label="Novidades"
+        name="novidades"
         control={
           <Switch
             name="novidades"
@@ -81,7 +109,7 @@ export default function DadosPessoais({ aoEnviar, validarCPF }) {
       />
 
       <Button variant="contained" color="primary" type="submit">
-        Cadastrar
+        Proximo
       </Button>
     </form>
   );
