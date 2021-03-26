@@ -10,6 +10,8 @@ export default function DadosUsuario({ aoEnviar }) {
     senha: { valido: true, text: "" },
   });
 
+  // as validacoes sao configuradas dentro do contexto de cadastro
+  // conforme pode ser visto no próprio arquivo.
   const validacoes = useContext(ValidacoesCadastro);
 
   function validarCampos(event) {
