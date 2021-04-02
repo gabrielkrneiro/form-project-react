@@ -1,40 +1,20 @@
 import React, { useState, useContext } from "react";
 import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
 import ValidacoesCadastro from "../../contexts/validacoesCadastro";
+import useErros from "./../../hooks/useErros";
 
 // FormularioCadastro(props)
 export default function DadosPessoais({ aoEnviar }) {
+  const validacoes = useContext(ValidacoesCadastro);
+
   const [nome, setNome] = useState("");
   const [sobreNome, setSobreNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [promocoes, setPromocoes] = useState(true);
   const [novidades, setNovidades] = useState(true);
 
-  const [erros, setErros] = useState(
-    {
-      cpf: { valido: true, text: "" },
-      nome: { valido: true, text: "" },
-    },
-    {}
-  );
-
-  const validacoes = useContext(ValidacoesCadastro);
-
-  function validarCampos(event) {
-    const { name, value } = event.target;
-    const novoEstado = { ...erros }; // para validacao dinamica eh necessario realizar copia do estado
-    novoEstado[name] = validacoes[name](value);
-    setErros(novoEstado);
-  }
-
-  function possoEnviar() {
-    for (let campo in erros) {
-      if (!erros[campo].valido) {
-        return false;
-      }
-    }
-    return true;
-  }
+  // usando hook customizado
+  const [erros, validarCampos, possoEnviar] = useErros(validacoes);
 
   return (
     <form
